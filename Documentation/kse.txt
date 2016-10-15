@@ -1,0 +1,2 @@
+Adding Trustifier KSE extensions to the linux kernel, 
+hopefully in a much friendlier way than before :-)
