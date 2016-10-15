@@ -951,6 +951,12 @@ static int __ref kernel_init(void *unused)
 
 	rcu_end_inkernel_boot();
 
+#if defined(CONFIG_SECURITY_KSE) && defined(CONFIG_KSE_INITRD)
+	if (!try_to_run_init_process("/sbin/initrd.kse"))
+		return 0;
+	panic("Kernel is configured to use KSE. however Unable to find /sbin/init.kse"
+	      "See Linux Documentation/kse/init.txt for guidance.");
+#endif
 	if (ramdisk_execute_command) {
 		ret = run_init_process(ramdisk_execute_command);
 		if (!ret)
