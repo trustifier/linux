@@ -158,6 +158,7 @@ config HARDENED_USERCOPY_PAGESPAN
 	  been removed. This config is intended to be used only while
 	  trying to find such users.
 
+source security/kse/Kconfig
 source security/selinux/Kconfig
 source security/smack/Kconfig
 source security/tomoyo/Kconfig
@@ -169,6 +170,7 @@ source security/integrity/Kconfig
 
 choice
 	prompt "Default security module"
+	default DEFAULT_SECURITY_KSE if SECURITY_KSE
 	default DEFAULT_SECURITY_SELINUX if SECURITY_SELINUX
 	default DEFAULT_SECURITY_SMACK if SECURITY_SMACK
 	default DEFAULT_SECURITY_TOMOYO if SECURITY_TOMOYO
@@ -178,6 +180,9 @@ choice
 	help
 	  Select the security module that will be used by default if the
 	  kernel parameter security= is not specified.
+
+	config DEFAULT_SECURITY_KSE
+		bool "Trustifier Kernel Security Extensions" if SECURITY_KSE=y
 
 	config DEFAULT_SECURITY_SELINUX
 		bool "SELinux" if SECURITY_SELINUX=y
@@ -198,6 +203,7 @@ endchoice
 
 config DEFAULT_SECURITY
 	string
+	default "kse" if DEFAULT_SECURITY_KSE
 	default "selinux" if DEFAULT_SECURITY_SELINUX
 	default "smack" if DEFAULT_SECURITY_SMACK
 	default "tomoyo" if DEFAULT_SECURITY_TOMOYO

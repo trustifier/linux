@@ -1,0 +1,11 @@
+config SECURITY_KSE
+	bool "Trustifier Kernel Security Extensions (KSE)"
+        depends on SECURITY_NETWORK && AUDIT && NET && INET
+	select NETWORK_SECMARK
+	default y
+	help
+	  This selects Trustifier Kernel Security Extensions
+	  more information is available at trustifier.com/kse
+	  If you're unsure on how to answer this question, 
+	  answer y
+	
