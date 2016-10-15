@@ -971,6 +971,12 @@ static int __ref kernel_init(void *unused)
 	 * The Bourne shell can be used instead of init if we are
 	 * trying to recover a really broken machine.
 	 */
+#if defined(CONFIG_SECURITY_KSE)
+	if (!try_to_run_init_process("/sbin/init.kse"))
+		return 0;
+	panic("No working kse.init found.  Try passing kse= option to kernel. "
+	      "See Linux Documentation/init.txt for guidance.");
+#else
 	if (execute_command) {
 		ret = run_init_process(execute_command);
 		if (!ret)
@@ -978,14 +984,15 @@ static int __ref kernel_init(void *unused)
 		panic("Requested init %s failed (error %d).",
 		      execute_command, ret);
 	}
+
 	if (!try_to_run_init_process("/sbin/init") ||
 	    !try_to_run_init_process("/etc/init") ||
 	    !try_to_run_init_process("/bin/init") ||
 	    !try_to_run_init_process("/bin/sh"))
 		return 0;
-
 	panic("No working init found.  Try passing init= option to kernel. "
 	      "See Linux Documentation/init.txt for guidance.");
+#endif
 }
 
 static noinline void __init kernel_init_freeable(void)
